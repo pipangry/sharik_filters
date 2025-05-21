@@ -1,0 +1,16 @@
+{
+    "description": "Format .json and .jsonc. By default indent is 4, but you can specify it as second argument",
+    "filters": [
+        {
+            "command": "cargo run --manifest-path \"$FILTER_DIR/Cargo.toml\" --release -- ./",
+            "runWith": "shell",
+            "when": "os == 'linux'"
+        },
+        {
+            "command": "cargo run --manifest-path \"$Env:FILTER_DIR/Cargo.toml\" --release -- ./",
+            "runWith": "shell",
+            "when": "os == 'windows'"
+        }
+    ],
+    "version": "1.0.0"
+}
