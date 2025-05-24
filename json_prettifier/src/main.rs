@@ -21,7 +21,7 @@ fn main() {
                 return;
             }
         }
-        None => 4,
+        None => 0,
     };
 
     let paths = WalkDir::new(target_dir)
@@ -55,10 +55,15 @@ fn format_file(path: PathBuf, indent: u32) -> Result<(), String> {
         .map_err(|e| format!("Unable to create a file: {}", e))?;
     let writer = BufWriter::new(file);
 
-    let indent = " ".repeat(indent as usize);
-    let ser_fmt = serde_json::ser::PrettyFormatter::with_indent(indent.as_bytes());
-    let mut ser = Serializer::with_formatter(writer, ser_fmt);
-    value.serialize(&mut ser).unwrap();
+    if indent != 0 {
+        // If indent is not a zero, we use PrettyFormatter
+        let indent = " ".repeat(indent as usize);
+        let ser_fmt = serde_json::ser::PrettyFormatter::with_indent(indent.as_bytes());
+        let mut ser = Serializer::with_formatter(writer, ser_fmt);
+        value.serialize(&mut ser).unwrap();
+    } else {
+        serde_json::to_writer(writer, &value).unwrap();
+    }
     Ok(())
 }
 
